@@ -1,27 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from "react";
 
 // You can replace with local file in public folder e.g. '/alarm.mp3'
 const SOUND_URL =
-  'https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg';
+  "https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg";
 
 export default function App() {
-  const [alarmTime, setAlarmTime] = useState('');
-  const [currentTime, setCurrentTime] = useState('');
+  const [alarmTime, setAlarmTime] = useState("");
+  const [currentTime, setCurrentTime] = useState("");
   const [isRinging, setIsRinging] = useState(false);
   const [audio] = useState(new Audio(SOUND_URL));
   const [problems, setProblems] = useState([]);
   const [answers, setAnswers] = useState({});
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState("dark");
 
   const REQUIRED_CORRECT = 3;
 
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
-      const hh = now.getHours().toString().padStart(2, '0');
-      const mm = now.getMinutes().toString().padStart(2, '0');
-      const ss = now.getSeconds().toString().padStart(2, '0');
+      const hh = now.getHours().toString().padStart(2, "0");
+      const mm = now.getMinutes().toString().padStart(2, "0");
+      const ss = now.getSeconds().toString().padStart(2, "0");
       const time = `${hh}:${mm}:${ss}`;
       setCurrentTime(time);
       if (time === alarmTime && !isRinging) {
@@ -36,7 +35,7 @@ export default function App() {
     generateProblems();
     audio.loop = true;
     audio.play().catch(() => {
-      console.warn('Autoplay blocked. Click Test Sound first.');
+      console.warn("Autoplay blocked. Click Test Sound first.");
     });
   };
 
@@ -51,14 +50,14 @@ export default function App() {
     stopAlarm();
     const now = new Date();
     now.setMinutes(now.getMinutes() + 5);
-    const hh = now.getHours().toString().padStart(2, '0');
-    const mm = now.getMinutes().toString().padStart(2, '0');
-    const ss = now.getSeconds().toString().padStart(2, '0');
+    const hh = now.getHours().toString().padStart(2, "0");
+    const mm = now.getMinutes().toString().padStart(2, "0");
+    const ss = now.getSeconds().toString().padStart(2, "0");
     setAlarmTime(`${hh}:${mm}:${ss}`);
   };
 
   const generateProblems = () => {
-    const ops = ['+', '-', '*'];
+    const ops = ["+", "-", "*"];
     let newProblems = [];
     for (let i = 0; i < REQUIRED_CORRECT; i++) {
       const a = Math.floor(Math.random() * 10) + 1;
@@ -78,13 +77,13 @@ export default function App() {
     problems.forEach((p, i) => {
       let correct;
       switch (p.op) {
-        case '+':
+        case "+":
           correct = p.a + p.b;
           break;
-        case '-':
+        case "-":
           correct = p.a - p.b;
           break;
-        case '*':
+        case "*":
           correct = p.a * p.b;
           break;
         default:
@@ -96,48 +95,41 @@ export default function App() {
     });
 
     if (count >= REQUIRED_CORRECT) {
-      stopAlarm(); // ✅ Stop if solved correctly one time
-      alert('✅ Alarm dismissed! Good job solving the problems.');
+      stopAlarm(); // ✅ Stop if solved correctly
+      alert("✅ Alarm dismissed! Good job solving the problems.");
     } else {
       alert(`Only ${count}/${REQUIRED_CORRECT} correct. Try again!`);
-      generateProblems(); // 🔁 Give new problems again if not solved
+      generateProblems(); // 🔁 Give new problems again
       setAnswers({});
     }
   };
 
   const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
-  const bgColor = theme === 'dark' ? '#1a202c' : '#f7fafc';
-  const textColor = theme === 'dark' ? '#edf2f7' : '#2d3748';
+  const bgColor = theme === "dark" ? "#1a202c" : "#f7fafc";
+  const textColor = theme === "dark" ? "#edf2f7" : "#2d3748";
 
   return (
     <div
       style={{
         backgroundColor: bgColor,
         color: textColor,
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontFamily: 'Arial, sans-serif',
-        transition: 'all 0.3s ease'
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "Arial, sans-serif",
+        transition: "all 0.3s ease",
       }}
     >
-      <motion.h1
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        style={{ fontSize: '2.5rem', marginBottom: '1rem' }}
-      >
-        ⏰ Smart Alarm
-      </motion.h1>
+      <h1 style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>⏰ Smart Alarm</h1>
 
-      <p style={{ marginBottom: '1rem' }}>Current Time: {currentTime}</p>
+      <p style={{ marginBottom: "1rem" }}>Current Time: {currentTime}</p>
 
-      <div style={{ marginBottom: '1rem' }}>
+      <div style={{ marginBottom: "1rem" }}>
         <label>
           Set Alarm Time (HH:MM:SS): &nbsp;
           <input
@@ -149,30 +141,33 @@ export default function App() {
         </label>
       </div>
 
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '2rem' }}>
-        {['Set +10 sec', 'Test Sound', 'Toggle Theme'].map((label, idx) => (
-          <motion.button
+      <div style={{ display: "flex", gap: "10px", marginBottom: "2rem" }}>
+        {["Set +10 sec", "Test Sound", "Toggle Theme"].map((label) => (
+          <button
             key={label}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
             style={{
-              padding: '0.5rem 1rem',
-              borderRadius: '8px',
-              border: 'none',
-              cursor: 'pointer',
-              background: idx === 0 ? '#48bb78' : idx === 1 ? '#4299e1' : '#ed8936',
-              color: 'white',
-              fontWeight: 'bold'
+              padding: "0.5rem 1rem",
+              borderRadius: "8px",
+              border: "none",
+              cursor: "pointer",
+              background:
+                label === "Set +10 sec"
+                  ? "#48bb78"
+                  : label === "Test Sound"
+                  ? "#4299e1"
+                  : "#ed8936",
+              color: "white",
+              fontWeight: "bold",
             }}
             onClick={() => {
-              if (label === 'Set +10 sec') {
+              if (label === "Set +10 sec") {
                 const now = new Date();
                 now.setSeconds(now.getSeconds() + 10);
-                const hh = now.getHours().toString().padStart(2, '0');
-                const mm = now.getMinutes().toString().padStart(2, '0');
-                const ss = now.getSeconds().toString().padStart(2, '0');
+                const hh = now.getHours().toString().padStart(2, "0");
+                const mm = now.getMinutes().toString().padStart(2, "0");
+                const ss = now.getSeconds().toString().padStart(2, "0");
                 setAlarmTime(`${hh}:${mm}:${ss}`);
-              } else if (label === 'Test Sound') {
+              } else if (label === "Test Sound") {
                 audio.play();
               } else {
                 toggleTheme();
@@ -180,99 +175,85 @@ export default function App() {
             }}
           >
             {label}
-          </motion.button>
+          </button>
         ))}
       </div>
 
-      <AnimatePresence>
-        {isRinging && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
+      {isRinging && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0,0,0,0.8)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div
             style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              background: 'rgba(0,0,0,0.8)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
+              background: "white",
+              padding: "2rem",
+              borderRadius: "12px",
+              maxWidth: "400px",
+              textAlign: "center",
+              color: "#2d3748",
             }}
           >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ duration: 0.4 }}
+            <h2 style={{ marginBottom: "1rem" }}>🚨 Alarm Ringing!</h2>
+            <p style={{ marginBottom: "1rem" }}>
+              Solve {REQUIRED_CORRECT} problems to stop:
+            </p>
+            {problems.map((p, i) => (
+              <div key={i} style={{ marginBottom: "0.5rem" }}>
+                <label>
+                  {p.a} {p.op} {p.b} ={" "}
+                  <input
+                    type="number"
+                    value={answers[i] || ""}
+                    onChange={(e) => handleAnswerChange(i, e.target.value)}
+                    style={{ width: "60px", marginLeft: "0.5rem" }}
+                  />
+                </label>
+              </div>
+            ))}
+            <button
+              onClick={checkAnswers}
               style={{
-                background: 'white',
-                padding: '2rem',
-                borderRadius: '12px',
-                maxWidth: '400px',
-                textAlign: 'center',
-                color: '#2d3748'
+                marginTop: "1rem",
+                padding: "0.5rem 1rem",
+                borderRadius: "8px",
+                border: "none",
+                background: "#48bb78",
+                color: "white",
+                fontWeight: "bold",
+                cursor: "pointer",
               }}
             >
-              <h2 style={{ marginBottom: '1rem' }}>🚨 Alarm Ringing!</h2>
-              <p style={{ marginBottom: '1rem' }}>
-                Solve {REQUIRED_CORRECT} problems to stop:
-              </p>
-              {problems.map((p, i) => (
-                <div key={i} style={{ marginBottom: '0.5rem' }}>
-                  <label>
-                    {p.a} {p.op} {p.b} ={' '}
-                    <input
-                      type="number"
-                      value={answers[i] || ''}
-                      onChange={(e) => handleAnswerChange(i, e.target.value)}
-                      style={{ width: '60px', marginLeft: '0.5rem' }}
-                    />
-                  </label>
-                </div>
-              ))}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={checkAnswers}
-                style={{
-                  marginTop: '1rem',
-                  padding: '0.5rem 1rem',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: '#48bb78',
-                  color: 'white',
-                  fontWeight: 'bold',
-                  cursor: 'pointer'
-                }}
-              >
-                Submit Answers
-              </motion.button>
-              <br />
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={snoozeAlarm}
-                style={{
-                  marginTop: '0.5rem',
-                  padding: '0.5rem 1rem',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: '#ed8936',
-                  color: 'white',
-                  fontWeight: 'bold',
-                  cursor: 'pointer'
-                }}
-              >
-                Snooze 5 min
-              </motion.button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              Submit Answers
+            </button>
+            <br />
+            <button
+              onClick={snoozeAlarm}
+              style={{
+                marginTop: "0.5rem",
+                padding: "0.5rem 1rem",
+                borderRadius: "8px",
+                border: "none",
+                background: "#ed8936",
+                color: "white",
+                fontWeight: "bold",
+                cursor: "pointer",
+              }}
+            >
+              Snooze 5 min
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
